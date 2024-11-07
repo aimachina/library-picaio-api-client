@@ -4,7 +4,7 @@ import axios, {AxiosInstance} from "axios";
 export class PicaioClient {
 	baseUrl: string;
 	axiosInstance: AxiosInstance;
-	bearerToken: string;
+	bearerToken?: string;
 
 	constructor(picaioClientConfig: PicaioClientConfig) {
 		this.baseUrl = picaioClientConfig.baseUrl;
