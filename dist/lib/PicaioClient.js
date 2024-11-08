@@ -45,7 +45,7 @@ function createPicaioClient(picaioClientConfig) {
             if (config && !config.__retryCount) {
                 config.__retryCount = 0;
             }
-            if (config && config.__retryCount < 3) {
+            if (config && config.__retryCount < picaioClient.maxRetries) {
                 config.__retryCount += 1;
                 console.log(`Retry attempt ${config.__retryCount}/${picaioClient.maxRetries}`);
                 yield new Promise(resolve => setTimeout(resolve, 1000 * config.__retryCount));
