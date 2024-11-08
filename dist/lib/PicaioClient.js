@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -38,20 +29,22 @@ function createPicaioClient(picaioClientConfig) {
         }
         return config;
     });
-    picaioClient.axiosInstance.interceptors.response.use(response => response, (error) => __awaiter(this, void 0, void 0, function* () {
-        if (error.response.status > 500) {
-            const config = error.config;
-            if (config && !config.__retryCount) {
-                config.__retryCount = 0;
-            }
-            if (config && config.__retryCount < 3) {
-                config.__retryCount += 1;
-                console.log(`Retry attempt ${config.__retryCount}/${picaioClient.maxRetries}`);
-                yield new Promise(resolve => setTimeout(resolve, 1000 * config.__retryCount));
-                return picaioClient.axiosInstance(config);
-            }
-        }
-        return Promise.reject(error);
-    }));
+    // picaioClient.axiosInstance.interceptors.response.use(response => response,
+    // 	async error => {
+    // 		if (error.response.status > 500) {
+    // 			const config = error.config;
+    // 			if (config && !config.__retryCount) {
+    // 				config.__retryCount = 0;
+    // 			}
+    // 			if (config && config.__retryCount < 3) {
+    // 				config.__retryCount += 1;
+    // 				console.log(`Retry attempt ${config.__retryCount}/${picaioClient.maxRetries}`);
+    //
+    // 				await new Promise(resolve => setTimeout(resolve, 1000 * config.__retryCount));
+    // 				return picaioClient.axiosInstance(config);
+    // 			}
+    // 		}
+    // 		return Promise.reject(error)
+    // 	});
     return picaioClient;
 }
