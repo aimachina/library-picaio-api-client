@@ -31,23 +31,23 @@ export function createPicaioClient(picaioClientConfig: PicaioClientConfig) {
 		return config
 	});
 
-	// picaioClient.axiosInstance.interceptors.response.use(response => response,
-	// 	async error => {
-	// 		if (error.response.status > 500) {
-	// 			const config = error.config;
-	// 			if (config && !config.__retryCount) {
-	// 				config.__retryCount = 0;
-	// 			}
-	// 			if (config && config.__retryCount < 3) {
-	// 				config.__retryCount += 1;
-	// 				console.log(`Retry attempt ${config.__retryCount}/${picaioClient.maxRetries}`);
-	//
-	// 				await new Promise(resolve => setTimeout(resolve, 1000 * config.__retryCount));
-	// 				return picaioClient.axiosInstance(config);
-	// 			}
-	// 		}
-	// 		return Promise.reject(error)
-	// 	});
+	picaioClient.axiosInstance.interceptors.response.use(response => response,
+		async error => {
+			if (error.code == 'ERR_NETWORK' || error.response?.status > 500) {
+				const config = error.config;
+				if (config && !config.__retryCount) {
+					config.__retryCount = 0;
+				}
+				if (config && config.__retryCount < 3) {
+					config.__retryCount += 1;
+					console.log(`Retry attempt ${config.__retryCount}/${picaioClient.maxRetries}`);
+
+					await new Promise(resolve => setTimeout(resolve, 1000 * config.__retryCount));
+					return picaioClient.axiosInstance(config);
+				}
+			}
+			return Promise.reject(error)
+		});
 
 	return picaioClient;
 }
